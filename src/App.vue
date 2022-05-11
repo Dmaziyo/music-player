@@ -1,32 +1,42 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <mz-header></mz-header>
+    <router-view class="router-view"></router-view>
+    <!-- 播放器 -->
+    <audio ref="mzPlayer"></audio>
   </div>
 </template>
-
-<style>
+<script>
+import MzHeader from './components/mz-header/mz-header'
+import { getPlayListDetail } from '@/api'
+import { defaultSheetId } from '@/config'
+import { mapMutations, mapActions } from 'vuex'
+export default {
+  components: {
+    MzHeader,
+  },
+  created() {
+    // 获取默认歌单的歌曲
+    getPlayListDetail(defaultSheetId).then((playlist) => {
+      const list = playlist.tracks.slice(0, 100)
+      this.setPlaylist({ list })
+    })
+    // 绑定当前audio元素
+    this.$nextTick(() => {
+      this.setAudioEle(this.$refs.mzPlayer)
+    })
+  },
+  methods: {
+    ...mapMutations({
+      setAudioEle: 'SET_AUDIOELE',
+    }),
+    ...mapActions(['setPlaylist']),
+  },
+}
+</script>
+<style lang="less">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  position: relative;
+  color: @text_color;
 }
 </style>

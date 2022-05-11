@@ -1,0 +1,32 @@
+@import 'reset';
+
+.pointer {
+  cursor: pointer;
+}
+
+.hover {
+  color: @text_color;
+  cursor: pointer;
+
+  &:hover {
+    color: @text_color_active
+  }
+}
+
+::-webkit-scrollbar {
+  // 滚动条整体
+  width: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-button {
+  //  滚动条两端的按钮
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  /*滚动条里面可以拖动的那部分*/
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
