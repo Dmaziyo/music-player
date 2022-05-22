@@ -4,7 +4,7 @@
     <router-link to="/music/playlist" tag="span">正在播放</router-link>
     <router-link to="/music/toplist" tag="span">推荐</router-link>
     <router-link to="/music/search" tag="span">搜索</router-link>
-    <router-link to="#" tag="span">我的歌单</router-link>
+    <router-link to="/music/userlist" tag="span">我的歌单</router-link>
     <!-- 在宽度小于960px时，显示跳出歌词的按钮，并把右边的歌词删除 -->
     <span class="show_960" @click="$emit('onClickLyric')">歌词</span>
     <router-link to="/music/historylist" tag="span">我听过的</router-link>

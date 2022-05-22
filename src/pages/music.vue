@@ -12,43 +12,18 @@
       </div>
       <!-- 歌词部分 -->
       <div class="music-right">
-        <lyric
-          ref="lyric"
-          :lyric="lyric"
-          :nolyric="nolyric"
-          :lyric-index="lyricIndex"
-          :currentMusic="currentMusic"
-        ></lyric>
+        <lyric ref="lyric" :lyric="lyric" :nolyric="nolyric" :lyric-index="lyricIndex" :currentMusic="currentMusic"></lyric>
       </div>
     </div>
     <!-- 底部区域 -->
-    <div
-      class="music-bar"
-      :class="{ disable: !musicReady || !currentMusic.id }"
-    >
+    <div class="music-bar" :class="{ disable: !musicReady || !currentMusic.id }">
       <!-- 左部分的按钮 -->
       <div class="music-bar-btns">
-        <mz-icon
-          title="上一首 Ctrl+Left"
-          type="prev"
-          class="pointer"
-          :size="36"
-          @click="prev"
-        />
+        <mz-icon title="上一首 Ctrl+Left" type="prev" class="pointer" :size="36" @click="prev" />
         <div title="播放暂停 Ctrl+Space" class="control-play pointer">
-          <mz-icon
-            :type="playing ? 'pause' : 'play'"
-            @click="play"
-            :size="24"
-          />
+          <mz-icon :type="playing ? 'pause' : 'play'" @click="play" :size="24" />
         </div>
-        <mz-icon
-          class="pointer"
-          type="next"
-          :size="36"
-          title="下一首 Ctrl + Right"
-          @click="next"
-        ></mz-icon>
+        <mz-icon class="pointer" type="next" :size="36" title="下一首 Ctrl + Right" @click="next"></mz-icon>
       </div>
       <!-- 按钮中间部分 -->
       <div class="music-music">
@@ -59,9 +34,7 @@
           </template>
           <template v-else>欢迎使用MaZiYo在线播放器</template>
         </div>
-        <div v-if="currentMusic.id" class="music-bar-time">
-          {{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}
-        </div>
+        <div v-if="currentMusic.id" class="music-bar-time">{{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}</div>
         <mz-progress
           class="music-progress"
           :percent="percentMusic"
@@ -71,25 +44,18 @@
         ></mz-progress>
       </div>
       <!-- 播放模式 -->
-      <mz-icon
-        class="pointer mode"
-        :type="ModeIconType"
-        :title="ModeIconTitle"
-        :size="30"
-        @click="modeChange"
-      ></mz-icon>
+      <mz-icon class="pointer mode" :type="ModeIconType" :title="ModeIconTitle" :size="30" @click="modeChange"></mz-icon>
       <!-- 评论 -->
-      <mz-icon class="pointer comment" type="comment" :size="30"></mz-icon>
+      <router-link :to="`/music/comment/${this.currentMusic.id}`">
+        <mz-icon class="pointer comment" type="comment" :size="30"></mz-icon>
+      </router-link>
       <!-- 音量控制 -->
       <div class="music-bar-volume" title="音量加减[Ctrl+Up/Down]">
         <volume :volume="volume" @volume-change="volumeChange" />
       </div>
     </div>
     <!-- 用于遮罩，显示背景 -->
-    <div
-      class="mzPlayer-bg"
-      :style="{ 'background-image': backgroundUrl }"
-    ></div>
+    <div class="mzPlayer-bg" :style="{ 'background-image': backgroundUrl }"></div>
     <div class="mzPlayer-mask"></div>
   </div>
 </template>
@@ -114,7 +80,7 @@ export default {
     MzProgress,
     MusicBtn,
     Lyric,
-    Volume,
+    Volume
   },
   data() {
     const volume = getVolume()
@@ -127,12 +93,12 @@ export default {
       currentTime: 0, //当前播放时间
       currentProgress: 0, //当前音乐缓存进度
       mode: 1,
-      volume,
+      volume
     }
   },
   // 定义过滤器
   filters: {
-    format,
+    format
   },
   computed: {
     // 播放进度
@@ -143,9 +109,7 @@ export default {
     // 背景图片
     backgroundUrl() {
       console.log('1')
-      return this.currentMusic.id
-        ? `url(${this.currentMusic.image})`
-        : 'url(' + require('../assets/background/bg_1.jpg') + ')'
+      return this.currentMusic.id ? `url(${this.currentMusic.image})` : 'url(' + require('../assets/background/bg_1.jpg') + ')'
     },
     // 获取播放模式
     ModeIconType() {
@@ -153,7 +117,7 @@ export default {
         [playMode.listLoop]: 'loop',
         [playMode.order]: 'sequence',
         [playMode.random]: 'random',
-        [playMode.loop]: 'loop-one',
+        [playMode.loop]: 'loop-one'
       }[this.mode]
     }, // 获取播放模式title
     ModeIconTitle() {
@@ -162,17 +126,10 @@ export default {
         [playMode.listLoop]: `列表循环${key}`,
         [playMode.order]: `顺序播放${key}`,
         [playMode.random]: `随机播放${key}`,
-        [playMode.loop]: `单曲循环${key}`,
+        [playMode.loop]: `单曲循环${key}`
       }[this.mode]
     },
-    ...mapGetters([
-      'audioEle',
-      'currentIndex',
-      'currentMusic',
-      'playList',
-      'playing',
-      'historyList',
-    ]),
+    ...mapGetters(['audioEle', 'currentIndex', 'currentMusic', 'playList', 'playing', 'historyList'])
   },
   watch: {
     // 当前音乐变更，是在playList下变更的
@@ -216,7 +173,7 @@ export default {
 
       this.lyricIndex = lyricIndex
     },
-    ...mapActions(['setHistory']),
+    ...mapActions(['setHistory'])
   },
   mounted() {
     this.$nextTick(() => {
@@ -229,10 +186,7 @@ export default {
       if (!this.musicReady) {
         return
       }
-      let index =
-        this.currentIndex - 1 >= 0
-          ? this.currentIndex - 1
-          : this.playList.length - 1
+      let index = this.currentIndex - 1 >= 0 ? this.currentIndex - 1 : this.playList.length - 1
       this.setCurrentIndex(index)
     },
     // 播放音乐
@@ -247,13 +201,12 @@ export default {
       if (!this.musicReady) {
         return
       }
-      let index =
-        this.currentIndex + 1 < this.playList.length ? this.currentIndex + 1 : 0
+      let index = this.currentIndex + 1 < this.playList.length ? this.currentIndex + 1 : 0
       this.setCurrentIndex(index)
     },
     // 获取歌词
     _getLyric(id) {
-      getLyric(id).then((res) => {
+      getLyric(id).then(res => {
         if (res.nolyric) {
           this.nolyric = true
         } else {
@@ -284,10 +237,10 @@ export default {
     ...mapMutations({
       setPlaying: 'SET_PLAYING',
       setPlayList: 'SET_PLAYLIST',
-      setCurrentIndex: 'SET_CURRENTINDEX',
+      setCurrentIndex: 'SET_CURRENTINDEX'
     }),
-    ...mapActions(['setHistory']),
-  },
+    ...mapActions(['setHistory'])
+  }
 }
 </script>
 

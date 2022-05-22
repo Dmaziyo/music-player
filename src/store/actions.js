@@ -3,12 +3,12 @@ import {
   setHistoryList,
   removeHistoryList,
   //   setMode,
-  //   setUserId
+  setUserId
 } from '@/utils/storage'
 import * as types from './mutation-types'
 
 function findIndex(list, music) {
-  return list.findIndex((item) => {
+  return list.findIndex(item => {
     return item.id === music.id
   })
 }
@@ -67,4 +67,9 @@ export const removePlayList = function ({ commit, state }, { index, list }) {
   } else {
     commit(types.SET_PLAYING, true)
   }
+}
+
+// 更改用户UID
+export const setUid = function ({ commit }, uid) {
+  commit(types.SET_UID, setUserId(uid))
 }

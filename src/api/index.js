@@ -34,7 +34,10 @@ export function getPlayListDetail(id) {
           return
         }
         // 说明用户未登录，则只给500首歌
-        const ids = trackIds.slice(0, 500).map(v => v.id).toString()
+        const ids = trackIds
+          .slice(0, 500)
+          .map(v => v.id)
+          .toString()
         getMusicDetail(ids).then(({ songs }) => {
           playlist.tracks = formatTopSongs(songs)
           resolve(playlist)
@@ -65,13 +68,24 @@ export function searchHot() {
   return axios.get('/search/hot')
 }
 
+// 获取评论
+export function getComment(id, page, limit = defaultLimit) {
+  return axios.get('/comment/music', {
+    params: {
+      offset: page * limit,
+      limit,
+      id
+    }
+  })
+}
+
 // 搜索歌曲
 /**
- * 
- * @param {*} keywords:关键词 
+ *
+ * @param {*} keywords:关键词
  * @param {*} page:页数
  * @param {*} limit:返回数量
- * @returns 
+ * @returns
  */
 export function search(keywords, page = 0, limit = defaultLimit) {
   return axios.get('/search', {
@@ -79,6 +93,15 @@ export function search(keywords, page = 0, limit = defaultLimit) {
       offset: page * limit,
       limit,
       keywords
+    }
+  })
+}
+
+// 获取登录用户歌单&头像信息
+export function getUserPlaylist(uid) {
+  return axios.get('/user/playlist', {
+    params: {
+      uid
     }
   })
 }

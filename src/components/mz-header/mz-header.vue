@@ -4,35 +4,24 @@
       <a href="https://github.com/Dmaziyo?tab=repositories" target="_blank">MaZiYo在线音乐播放器</a>
     </h1>
     <div class="user">
-      <div class="user-btn" @click="openDialog(0)">登录</div>
+      <template v-if="user">
+        <a class="user-info" :href="`https://music.163.com/#/user/home?id=${user.userId}`">
+          <img class="avatar" :src="`${user.avatarUrl}?param=50y50`" />
+          <span>{{user.nickname}}</span>
+        </a>
+        <span class="user-btn" @click="openDialog(2)">退出</span>
+      </template>
+      <div v-else class="user-btn" @click="openDialog(0)">登录</div>
     </div>
     <!-- 登录 -->
-    <mz-dialog
-      ref="loginDialog"
-      head-text="登录"
-      confirm-btn-text="登录"
-      cancel-btn-text="关闭"
-      @confirm="login"
-    >
+    <mz-dialog ref="loginDialog" head-text="登录" confirm-btn-text="登录" cancel-btn-text="关闭" @confirm="login">
       <div class="mz-dialog-text">
-        <input
-          class="mz-dialog-input"
-          v-model.trim="uidValue"
-          autofocus
-          placeholder="请输入您的网易云UID"
-          type="number"
-        />
+        <input class="mz-dialog-input" v-model.trim="uidValue" autofocus placeholder="请输入您的网易云UID" @keyup.enter="login" type="number" />
       </div>
       <div slot="btn" @click="openDialog(1)">帮助</div>
     </mz-dialog>
     <!-- helper -->
-    <mz-dialog
-      ref="helpDialog"
-      head-text="登录帮助"
-      confirm-btn-text="去登录"
-      cancel-btn-text="关闭"
-      @confirm="openDialog(0)"
-    >
+    <mz-dialog ref="helpDialog" head-text="登录帮助" confirm-btn-text="去登录" cancel-btn-text="关闭" @confirm="openDialog(0)">
       <div class="mz-dialog-text">
         <ol>
           <li>
@@ -44,20 +33,34 @@
         </ol>
       </div>
     </mz-dialog>
+    <!--退出账号-->
+    <mz-dialog ref="outDialog" head-text="提示" confirm-btn-text="确定" cancel-btn-text="取消" @confirm="logout">
+      <div class="mz-dialog-text">确定要退出当前用户吗?</div>
+    </mz-dialog>
   </header>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import { getUserPlaylist } from '@/api'
+
+import { toHttps } from '@/utils/util'
 import MzDialog from '../../base/mz-dialog/mz-dialog.vue'
 export default {
   data() {
     return {
-      user: {},
-      uidValue: '',
+      user: undefined,
+      uidValue: ''
     }
   },
+  computed: {
+    ...mapGetters(['uid'])
+  },
   components: {
-    MzDialog,
+    MzDialog
+  },
+  created() {
+    this.uid && this._getUserPlayList(this.uid)
   },
   methods: {
     openDialog(key) {
@@ -69,9 +72,19 @@ export default {
         case 1: {
           this.$refs.loginDialog.hide()
           this.$refs.helpDialog.show()
+          break
+        }
+        case 2: {
+          this.$refs.outDialog.show()
+          break
+        }
+        case 3: {
+          this.$refs.loginDialog.hide()
+          break
         }
       }
     },
+    // 登录
     login() {
       if (this.uidValue === '') {
         console.log('UID 不能为空')
@@ -79,8 +92,34 @@ export default {
         this.openDialog(0)
         return
       }
+      this.openDialog(3)
+      this._getUserPlayList(this.uidValue)
     },
-  },
+    // 退出
+    logout() {
+      this.setUid(null)
+      this.user = undefined
+      this.$mzToast('退出成功')
+    },
+    // 获取用户数据
+    _getUserPlayList(uid) {
+      getUserPlaylist(uid).then(({ playlist = [] }) => {
+        this.uidValue = ''
+        if (playlist.length === 0 || !playlist[0].creator) {
+          this.$mzToast(`未查询到UID为${uid}的用户信息`)
+          return
+        }
+        const creator = playlist[0].creator
+        this.setUid(uid)
+        creator.avatarUrl = toHttps(creator.avatarUrl)
+        this.user = creator
+        setTimeout(() => {
+          this.$mzToast(`欢迎${this.user.nickname}使用mz播放器`)
+        }, 200)
+      })
+    },
+    ...mapActions(['setUid'])
+  }
 }
 </script>
 
@@ -111,6 +150,25 @@ export default {
     right: 15px;
     text-align: right;
     transform: translateY(-50%);
+    &-info {
+      float: left;
+      margin-right: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      color: @text_color_active;
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        vertical-align: middle;
+      }
+      span {
+        margin-left: 10px;
+        @media (max-width: 425px) {
+          display: none;
+        }
+      }
+    }
     &-btn {
       cursor: pointer;
       color: @text_color;
