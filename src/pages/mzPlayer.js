@@ -6,26 +6,26 @@
 // 初始化音乐
 const mzPlayerMusic = {
   initAudio(that) {
-    const ele = that.audioEle;//音频元素？
+    const ele = that.audioEle //音频元素？
     // 在音频下载缓存时执行
     ele.onprogress = () => {
       try {
         // console.log(ele.buffered);
         if (ele.buffered.length > 0) {
           const duration = that.currentMusic.duration
-          let buffered = 0;
+          let buffered = 0
           //ele.buffered返回的是一个区间对象，可能有多个区间
-          buffered = ele.buffered(0) >= duration ? duration : ele.buffered.end(0)
-          that.currentProgress = buffered / duration//更改缓存进度条
+          buffered = ele.buffered.end(0) >= duration ? duration : ele.buffered.end(0)
+          that.currentProgress = buffered / duration //更改缓存进度条
         }
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
     }
     // 在视频或者音乐开始播放时触发
     ele.onplay = () => {
-      let timer;
-      clearTimeout(timer)//为了操作一下timer
+      let timer
+      clearTimeout(timer) //为了操作一下timer
       timer = setTimeout(() => {
         that.musicReady = true
       }, 100)

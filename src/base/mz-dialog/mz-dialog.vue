@@ -1,11 +1,12 @@
+  <!-- 弹窗对话组件 -->
 <template>
   <transition name="mz-dialog-fade">
     <!-- 控制整个盒子是否显示 -->
     <div v-show="dialogShow" class="mz-dialog-box">
       <div class="mz-dialog-wrapper">
         <div class="mz-dialog-content">
-          <!-- 这个slot是用来设置title的 -->
           <div class="mz-dialog-head" v-text="headText"></div>
+          <!-- 添加对话框内容 -->
           <slot></slot>
           <div class="mz-dialog-btns">
             <div
@@ -27,53 +28,60 @@
 export default {
   name: 'MzDialog',
   props: {
-    // 分辨dialog类型，confirm包含取消，而alert不包含取消
+    // confirm包含取消按钮，而alert不包含取消按钮
     type: {
       type: String,
-      default: 'confirm',
+      default: 'confirm'
     },
-    //
+    //设置标题
     headText: {
       type: String,
-      default: '提示',
+      default: '提示'
     },
+    // 取消按钮的文字
     cancelBtnText: {
       type: String,
-      default: '关闭',
+      default: '关闭'
     },
+    // 确认按钮的文字
     confirmBtnText: {
       type: String,
-      default: '确定',
-    },
+      default: '确定'
+    }
   },
   data() {
     return {
       // 显示对话框
-      dialogShow: false,
+      dialogShow: false
     }
   },
   computed: {
+    // type属性格式化
     dialogType() {
       return this.type.toLowerCase()
-    },
+    }
   },
 
   methods: {
+    // 显示对话框
     show() {
       this.dialogShow = true
     },
+    // 隐藏对话框
     hide() {
       this.dialogShow = false
     },
+    // 确认事件
     confirm() {
       this.hide()
       this.$emit('confirm')
     },
+    // 取消事件
     cancel() {
       this.hide()
       this.$emit('cancel')
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -176,6 +184,7 @@ export default {
     }
   }
 }
+// 自制动画
 @keyframes mz-dialog-fadein{
   0%{
     opacity: 0;

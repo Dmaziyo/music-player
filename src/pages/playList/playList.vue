@@ -1,20 +1,12 @@
 <template>
+  <!-- 正在播放歌曲list -->
   <div class="playList">
-    <music-list
-      listType="duration"
-      :list="playList"
-      @select="selectItem"
-      @del="deleteItem"
-    >
+    <music-list listType="duration" :list="playList" @select="selectItem" @del="deleteItem">
       <div slot="listBtn" class="list-btn">
         <span @click="showDialog">清空列表</span>
       </div>
     </music-list>
-    <mz-dialog
-      ref="dialog"
-      body-text="是否清空正在播放列表"
-      confirm-btn-text="清空"
-    ></mz-dialog>
+    <mz-dialog ref="dialog" body-text="是否清空正在播放列表" confirm-btn-text="清空"></mz-dialog>
   </div>
 </template>
 
@@ -26,12 +18,13 @@ export default {
   name: 'PlayList',
   components: {
     MzDialog,
-    MusicList,
+    MusicList
   },
   computed: {
-    ...mapGetters(['playing', 'playList', 'currentMusic']),
+    ...mapGetters(['playing', 'playList', 'currentMusic'])
   },
   methods: {
+    // 切换歌曲
     selectItem(item, index) {
       // 如果点击的是新歌曲，则更改currentMusic,并且播放
       if (item.id !== this.currentMusic.id) {
@@ -39,9 +32,11 @@ export default {
         this.setPlaying(true)
       }
     },
+    // 显示弹窗
     showDialog() {
       this.$refs.dialog.show()
     },
+    // 删除歌曲
     deleteItem(index) {
       let list = [...this.playList]
       list.splice(index, 1)
@@ -49,10 +44,10 @@ export default {
     },
     ...mapMutations({
       setPlaying: 'SET_PLAYING',
-      setCurrentIndex: 'SET_CURRENTINDEX',
+      setCurrentIndex: 'SET_CURRENTINDEX'
     }),
-    ...mapActions(['removePlayList']),
-  },
+    ...mapActions(['removePlayList'])
+  }
 }
 </script>
 

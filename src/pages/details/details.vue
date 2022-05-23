@@ -1,4 +1,5 @@
 <template>
+  <!-- 歌单详细内容 -->
   <div class="details">
     <mz-loading v-show="mzLoadShow"></mz-loading>
     <music-list :list="list" @select="selectItem"></music-list>
@@ -15,19 +16,20 @@ import * as types from '@/store/mutation-types'
 export default {
   components: {
     MzLoading,
-    MusicList,
+    MusicList
   },
   props: {
-    id: String,
+    id: String
   },
   data() {
     return {
-      list: [],
+      list: []
     }
   },
   created() {
+    // 获取歌单详细
     getPlayListDetail(this.id)
-      .then((playlist) => {
+      .then(playlist => {
         this.list = playlist.tracks
         this._hideLoad()
       })
@@ -36,10 +38,11 @@ export default {
       })
   },
   computed: {
-    ...mapGetters(['playing', 'currentMusic']),
+    ...mapGetters(['playing', 'currentMusic'])
   },
   mixins: [loadMixin],
   methods: {
+    // 选中歌曲
     selectItem(item, index) {
       if (this.currentMusic.id && item.id === this.currentMusic.id) {
         return
@@ -48,16 +51,16 @@ export default {
       this.setPlaying(true)
       this.selectPlay({
         index,
-        list: this.list,
+        list: this.list
       })
     },
     ...mapMutations({
       setCurrentIndex: types.SET_CURRENTINDEX,
       setPlayList: types.SET_PLAYLIST,
-      setPlaying: types.SET_PLAYING,
+      setPlaying: types.SET_PLAYING
     }),
-    ...mapActions(['selectPlay', 'removePlayList']),
-  },
+    ...mapActions(['selectPlay', 'removePlayList'])
+  }
 }
 </script>
 

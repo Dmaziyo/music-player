@@ -1,4 +1,5 @@
 <template>
+  <!-- 页面header -->
   <header class="mz-header">
     <h1 class="header">
       <a href="https://github.com/Dmaziyo?tab=repositories" target="_blank">MaZiYo在线音乐播放器</a>
@@ -14,14 +15,33 @@
       <div v-else class="user-btn" @click="openDialog(0)">登录</div>
     </div>
     <!-- 登录 -->
-    <mz-dialog ref="loginDialog" head-text="登录" confirm-btn-text="登录" cancel-btn-text="关闭" @confirm="login">
+    <mz-dialog
+      ref="loginDialog"
+      head-text="登录"
+      confirm-btn-text="登录"
+      cancel-btn-text="关闭"
+      @confirm="login"
+    >
       <div class="mz-dialog-text">
-        <input class="mz-dialog-input" v-model.trim="uidValue" autofocus placeholder="请输入您的网易云UID" @keyup.enter="login" type="number" />
+        <input
+          class="mz-dialog-input"
+          v-model.trim="uidValue"
+          autofocus
+          placeholder="请输入您的网易云UID"
+          @keyup.enter="login"
+          type="number"
+        />
       </div>
       <div slot="btn" @click="openDialog(1)">帮助</div>
     </mz-dialog>
     <!-- helper -->
-    <mz-dialog ref="helpDialog" head-text="登录帮助" confirm-btn-text="去登录" cancel-btn-text="关闭" @confirm="openDialog(0)">
+    <mz-dialog
+      ref="helpDialog"
+      head-text="登录帮助"
+      confirm-btn-text="去登录"
+      cancel-btn-text="关闭"
+      @confirm="openDialog(0)"
+    >
       <div class="mz-dialog-text">
         <ol>
           <li>
@@ -34,7 +54,13 @@
       </div>
     </mz-dialog>
     <!--退出账号-->
-    <mz-dialog ref="outDialog" head-text="提示" confirm-btn-text="确定" cancel-btn-text="取消" @confirm="logout">
+    <mz-dialog
+      ref="outDialog"
+      head-text="提示"
+      confirm-btn-text="确定"
+      cancel-btn-text="取消"
+      @confirm="logout"
+    >
       <div class="mz-dialog-text">确定要退出当前用户吗?</div>
     </mz-dialog>
   </header>
@@ -49,7 +75,9 @@ import MzDialog from '../../base/mz-dialog/mz-dialog.vue'
 export default {
   data() {
     return {
+      //用户信息
       user: undefined,
+      //用户输入信息
       uidValue: ''
     }
   },
@@ -60,9 +88,11 @@ export default {
     MzDialog
   },
   created() {
+    // 获取用户信息
     this.uid && this._getUserPlayList(this.uid)
   },
   methods: {
+    // 打开对话弹窗
     openDialog(key) {
       switch (key) {
         case 0: {

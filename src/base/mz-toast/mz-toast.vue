@@ -13,14 +13,15 @@ export default {
       position: 'center', //显示位置
       message: '默认消息', //显示消息
       duration: 1500, //显示时间
-      visible: true, //展示
+      visible: true //展示
     }
   },
   computed: {
+    // 弹出框的位置
     positionClass() {
       return 'mz-toast-' + this.position
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -54,6 +55,7 @@ export default {
     bottom: 10%;
   }
 }
+// 动画
 .toast-fade-enter{
   opacity: 0;
 }

@@ -1,6 +1,17 @@
 import axios from '@/utils/axios'
 import { formatTopSongs } from '@/utils/song'
 import { defaultLimit } from '@/config'
+/** Api接口
+ * getToplistDetail     // 歌单排行榜
+ * getPersonalized      // 推荐歌单列表
+ * getPlayListDetail    // 歌单详细
+ * getMusicDetail       // 获取歌曲详细:可以获得单曲 ,也可以获得多首曲子
+ * getLyric             //获歌词
+ * searchHot            //热搜词条
+ * search               //搜索
+ * getComment           //获取评论
+ * getUserPlaylist      //获取登录用户歌单
+ */
 
 // 歌单排行榜
 export function getToplistDetail() {

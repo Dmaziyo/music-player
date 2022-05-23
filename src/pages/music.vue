@@ -12,18 +12,38 @@
       </div>
       <!-- 歌词部分 -->
       <div class="music-right">
-        <lyric ref="lyric" :lyric="lyric" :nolyric="nolyric" :lyric-index="lyricIndex" :currentMusic="currentMusic"></lyric>
+        <lyric
+          ref="lyric"
+          :lyric="lyric"
+          :nolyric="nolyric"
+          :lyric-index="lyricIndex"
+          :currentMusic="currentMusic"
+        ></lyric>
       </div>
     </div>
     <!-- 底部区域 -->
     <div class="music-bar" :class="{ disable: !musicReady || !currentMusic.id }">
       <!-- 左部分的按钮 -->
       <div class="music-bar-btns">
-        <mz-icon title="上一首 Ctrl+Left" type="prev" class="pointer" :size="36" @click="prev" />
+        <mz-icon
+          title="上一首 Ctrl+Left"
+          type="prev"
+          class="pointer"
+          :size="36"
+          @keydown.ctrl.left="prev"
+          @click="prev"
+        />
         <div title="播放暂停 Ctrl+Space" class="control-play pointer">
           <mz-icon :type="playing ? 'pause' : 'play'" @click="play" :size="24" />
         </div>
-        <mz-icon class="pointer" type="next" :size="36" title="下一首 Ctrl + Right" @click="next"></mz-icon>
+        <mz-icon
+          class="pointer"
+          type="next"
+          :size="36"
+          title="下一首 Ctrl + Right"
+          @keyup.ctrl.left="prev"
+          @click="next"
+        ></mz-icon>
       </div>
       <!-- 按钮中间部分 -->
       <div class="music-music">
@@ -34,7 +54,10 @@
           </template>
           <template v-else>欢迎使用MaZiYo在线播放器</template>
         </div>
-        <div v-if="currentMusic.id" class="music-bar-time">{{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}</div>
+        <div
+          v-if="currentMusic.id"
+          class="music-bar-time"
+        >{{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}</div>
         <mz-progress
           class="music-progress"
           :percent="percentMusic"
@@ -44,7 +67,13 @@
         ></mz-progress>
       </div>
       <!-- 播放模式 -->
-      <mz-icon class="pointer mode" :type="ModeIconType" :title="ModeIconTitle" :size="30" @click="modeChange"></mz-icon>
+      <mz-icon
+        class="pointer mode"
+        :type="ModeIconType"
+        :title="ModeIconTitle"
+        :size="30"
+        @click="modeChange"
+      ></mz-icon>
       <!-- 评论 -->
       <router-link :to="`/music/comment/${this.currentMusic.id}`">
         <mz-icon class="pointer comment" type="comment" :size="30"></mz-icon>
@@ -95,6 +124,11 @@ export default {
       mode: 1,
       volume
     }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.initKeyDown()
+    })
   },
   // 定义过滤器
   filters: {
@@ -187,6 +221,7 @@ export default {
         return
       }
       let index = this.currentIndex - 1 >= 0 ? this.currentIndex - 1 : this.playList.length - 1
+      this.setPlaying(true)
       this.setCurrentIndex(index)
     },
     // 播放音乐
@@ -202,6 +237,7 @@ export default {
         return
       }
       let index = this.currentIndex + 1 < this.playList.length ? this.currentIndex + 1 : 0
+      this.setPlaying(true)
       this.setCurrentIndex(index)
     },
     // 获取歌词
@@ -217,6 +253,28 @@ export default {
       })
     },
 
+    // 绑定按键
+    initKeyDown() {
+      document.onkeydown = e => {
+        switch (e.ctrlKey && e.key) {
+          case 'ArrowUp':
+            this.volumeChange(this.volume >= 1 ? 1 : this.volume + 0.1)
+            break
+          case 'ArrowDown':
+            this.volumeChange(this.volume <= 0 ? 0 : this.volume - 0.1)
+            break
+          case 'ArrowLeft':
+            this.prev()
+            break
+          case 'ArrowRight':
+            this.next()
+            break
+          case ' ':
+            this.setPlaying(false)
+            break
+        }
+      }
+    },
     // 切换播放顺序
     modeChange() {
       const mode = (this.mode + 1) % 4

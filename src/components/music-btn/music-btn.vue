@@ -1,4 +1,5 @@
 <template>
+  <!-- 路由切换的按钮组 -->
   <div class="music-btn">
     <!-- tag将router渲染成对应的标签 -->
     <router-link to="/music/playlist" tag="span">正在播放</router-link>

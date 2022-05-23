@@ -1,4 +1,5 @@
 <template>
+  <!-- 歌词组件 -->
   <div>
     <!-- 封面区域，用一个列表,其实也是盒子咯 -->
     <dl class="music-info">
@@ -48,43 +49,40 @@ export default {
     // 歌词
     lyric: {
       type: Array,
-      default: () => [], //对象类型必须从一个工厂中返回
+      default: () => [] //对象类型必须从一个工厂中返回
     },
     // 是否有歌词
     nolyric: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 正在播放歌词下标
     lyricIndex: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   components: {
-    MzIcon,
+    MzIcon
   },
   data() {
     return {
-      top: 0, //歌词居中
+      top: 0 //歌词居中
     }
   },
   computed: {
     // 音乐封面
     musicPicUrl() {
-      return this.currentMusic.id
-        ? `${this.currentMusic.image}?param=300y300`
-        : require('../../assets/img/player_cover.png') //在js中引入图片必须使用require
+      return this.currentMusic.id ? `${this.currentMusic.image}?param=300y300` : require('../../assets/img/player_cover.png') //在js中引入图片必须使用require
     },
+    // 控制歌词播放位置
     lyricTop() {
-      return `transform:translate3d(0,${
-        -34 * (this.lyricIndex - this.top)
-      }px,0)`
+      return `transform:translate3d(0,${-34 * (this.lyricIndex - this.top)}px,0)`
     },
-    ...mapGetters(['currentMusic']),
+    ...mapGetters(['currentMusic'])
   },
   mounted() {
-    // 窗口监听
+    // 窗口监听,当页面大小变化时，自动修改高度
     window.addEventListener('resize', () => {
       clearTimeout(this.resizeTimer)
       this.resizeTimer = setTimeout(() => {
@@ -99,15 +97,15 @@ export default {
     //移动端的歌词显示
     calcTop() {
       const dom = this.$refs.musicLyric //歌词DOM
-      //获取元素的css样式
+      //获取元素的css样式，歌词不显示时则不需要进行调整
       const { display = '' } = window.getComputedStyle(dom)
       if (display === 'none') {
         return
       }
       const height = dom.offsetHeight //返回元素的高度
       this.top = Math.floor(height / 34 / 2) //一个p的高度是34px，然后居中就是第n个p，也就是除2
-    },
-  },
+    }
+  }
 }
 </script>
 

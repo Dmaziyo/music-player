@@ -23,14 +23,14 @@ import MzIcon from '../../base/mz-icon/mz-icon'
 export default {
   components: {
     MzProgress,
-    MzIcon,
+    MzIcon
   },
   props: {
     // 音量
     volume: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     // 是否静音
@@ -45,20 +45,22 @@ export default {
           this.lastVolume = this.volume
         }
         this.handleVolumeChange(volume)
-      },
+      }
     },
+    // 获取音量图标
     getVolumeIconType() {
       return this.isMute ? 'volume-off' : 'volume'
-    },
+    }
   },
   methods: {
+    //将新数据返回给父组件
     handleVolumeChange(percent) {
       this.$emit('volume-change', percent)
     },
     handleToggleVolume() {
       this.isMute = !this.isMute
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -71,6 +73,7 @@ export default {
     margin-right: 5px;
   }
   &-progress-wrapper {
+    // 自动填满剩余区域
     flex: 1;
   }
   @media (max-width: 768px) {

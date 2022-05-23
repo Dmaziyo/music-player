@@ -1,4 +1,5 @@
 <template>
+  <!-- 获取数据失败时显示提示 -->
   <div class="mz-no-result">
     <p class="mz-no-result-text">{{title}}</p>
   </div>
@@ -8,11 +9,12 @@
 export default {
   name: 'MzNoResult',
   props: {
+    // 显示内容
     title: {
       type: String,
-      default: '',
-    },
-  },
+      default: ''
+    }
+  }
 }
 </script>
 

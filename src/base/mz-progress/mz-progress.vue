@@ -1,9 +1,10 @@
 <template>
-  <!-- 进度条拖动 -->
+  <!-- 进度条 -->
   <div ref="mzProgress" @click="barClick" class="mzProgress">
     <div class="mzProgress-bar">
-      <!-- 一个是缓存条，一个是进度条 -->
+      <!-- 缓冲进度 -->
       <div ref="mzPercentProgress" class="mzProgress-outer"></div>
+      <!-- 播放进度 -->
       <div ref="mzProgressInner" class="mzProgress-inner">
         <div class="mzProgress-dot" @mousedown="barDown"></div>
       </div>
@@ -19,15 +20,16 @@ export default {
     // 进度值
     percent: {
       type: Number,
-      default: 0,
+      default: 0
     },
     // 缓冲值
     percentProgress: {
       type: Number,
-      default: 0,
-    },
+      default: 0
+    }
   },
   watch: {
+    // 监听播放进度，并控制进度
     percent(newPercent) {
       if (newPercent >= 0 && !this.move.status) {
         const barWidth = this.$refs.mzProgress.clientWidth - dotWidth
@@ -36,18 +38,18 @@ export default {
       }
     },
     percentProgress(newValue) {
-      const barWidth = this.$refs.mmProgress.clientWidth - dotWidth
+      const barWidth = this.$refs.mzProgress.clientWidth - dotWidth
       let offsetWidth = barWidth * newValue
       this.$refs.mzPercentProgress.style.width = `${offsetWidth}px`
-    },
+    }
   },
   data() {
     return {
       move: {
         status: false, //是否可拖动
-        startX: 0, //最开始的坐标
-        left: 0, //记录已经移动的距离
-      },
+        startX: 0, //鼠标按下时原位置
+        left: 0 //记录已经移动的距离
+      }
     }
   },
   // 在所有数据更新完毕后，绑定所有事件
@@ -68,10 +70,12 @@ export default {
       document.addEventListener('mousemove', this.barMove)
       document.addEventListener('mouseup', this.barUp) //取消点击状态
     },
+    // 取消绑定事件
     unbindEvents() {
       document.removeEventListener('mousemove', this.barMove)
       document.removeEventListener('mouseup', this.barUp)
     },
+    // 鼠标按下
     barDown(e) {
       this.move.status = true
       // 记录按下时鼠标的水平位置
@@ -79,6 +83,7 @@ export default {
       // 根据这个进度条的宽度来判断已经播放的长度
       this.move.left = this.$refs.mzProgressInner.clientWidth
     },
+    // 进度条移动
     barMove(e) {
       if (!this.move.status) {
         return false
@@ -87,10 +92,7 @@ export default {
       let endX = e.clientX
       let dist = endX - this.move.startX //计算距离distance
       // 这样写是为了防止超过最左或最右的情况
-      let offsetWidth = Math.min(
-        this.$refs.mzProgress.clientWidth - dotWidth,
-        Math.max(0, this.move.left + dist)
-      )
+      let offsetWidth = Math.min(this.$refs.mzProgress.clientWidth - dotWidth, Math.max(0, this.move.left + dist))
       this.moveSlide(offsetWidth)
       this.commitPercent()
     },
@@ -109,21 +111,18 @@ export default {
     barClick(e) {
       // rect为节点最左边至浏览器最左边的距离
       let rect = this.$refs.mzProgress.getBoundingClientRect()
-      let offsetWidth = Math.min(
-        this.$refs.mzProgress.clientWidth - dotWidth,
-        Math.max(0, e.clientX - rect.left)
-      )
+      let offsetWidth = Math.min(this.$refs.mzProgress.clientWidth - dotWidth, Math.max(0, e.clientX - rect.left))
       this.moveSlide(offsetWidth)
       this.commitPercent(true)
     },
-    // 分两种情况，拖动中，拖动完
+    // emit事件:分两种情况，拖动中，拖动完
     commitPercent(isEnd = false) {
       const { mzProgress, mzProgressInner } = this.$refs
       const lineWidth = mzProgress.clientWidth - dotWidth
       const percent = mzProgressInner.clientWidth / lineWidth
       this.$emit(isEnd ? 'percent-change-end' : 'percent-change', percent)
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -43,6 +43,7 @@ export default {
     ...mapGetters(['uid'])
   },
   methods: {
+    // 获取当前用户歌单
     _getUserPlaylist() {
       getUserPlaylist(this.uid).then(res => {
         this.list = res.playlist.slice(1)

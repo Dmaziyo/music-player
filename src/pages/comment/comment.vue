@@ -2,6 +2,7 @@
   <div class="comment">
     <mz-loading :value="false"></mz-loading>
     <dl class="comment-list">
+      <!-- 热门评论 -->
       <dt class="comment-title">精彩评论</dt>
       <dd v-for="item in hotComments" :key="item.commentId" class="comment-item">
         <a :href="`https://music.163.com/#/user/home?id=${item.user.userId}`" target="_blank">
@@ -9,7 +10,10 @@
           <h2 class="comment-item-title">{{item.user.nickname}}</h2>
         </a>
         <p class="comment-item-text">{{item.content}}</p>
-        <div v-if="item.beReplied>0" class="comment-item-replied">{{item.beReplied[0].user.nickname}}回复:{{item.beReplied[0].content}}</div>
+        <div
+          v-if="item.beReplied>0"
+          class="comment-item-replied"
+        >{{item.beReplied[0].user.nickname}}回复:{{item.beReplied[0].content}}</div>
         <div class="comment-item-opt">
           <span class="comment-opt-date">{{item.time|format}}</span>
           <span v-if="item.likedCount>0" class="comment-opt-likes">
@@ -18,6 +22,7 @@
           </span>
         </div>
       </dd>
+      <!-- 最新评论 -->
       <dt class="comment-title">最新评论</dt>
       <dd v-for="item in comments" :key="item.commentId" class="comment-item">
         <a :href="`https://music.163.com/#/user/home?id=${item.user.userId}`" target="_blank">
@@ -25,7 +30,10 @@
           <h2 class="comment-item-title">{{item.user.nickname}}</h2>
         </a>
         <p>{{item.content}}</p>
-        <div v-if="item.beReplied>0" class="comment-item-replied">{{item.beReplied[0].user.nickname}}回复:{{item.beReplied[0].content}}</div>
+        <div
+          v-if="item.beReplied>0"
+          class="comment-item-replied"
+        >{{item.beReplied[0].user.nickname}}回复:{{item.beReplied[0].content}}</div>
         <div class="comment-item-opt">
           <span class="comment-opt-date">{{item.time|format}}</span>
           <span v-if="item.liked" class="comment-opt-likes">
@@ -51,9 +59,9 @@ export default {
   mixins: [loadMixin],
   data() {
     return {
-      page: 0,
-      hotComments: [],
-      comments: []
+      page: 0, //获取评论偏移量
+      hotComments: [], //热门评论
+      comments: [] //最新评论
     }
   },
   props: {
@@ -63,6 +71,7 @@ export default {
     this.initData()
   },
   methods: {
+    // 获取评论
     initData() {
       getComment(this.id, this.page).then(res => {
         console.log(res)
@@ -74,6 +83,12 @@ export default {
     pullUp() {}
   },
   filters: {
+    // 格式化时间类型
+    /**
+     * 1分钟以内的
+     * 一小时以内的
+     * 其他具体日期的
+     */
     format(time) {
       let formatTime
       const date = new Date(time)
@@ -144,12 +159,14 @@ export default {
       line-height: 25px;
       color: @text_color;
     }
+    // 回复评论样式
     .comment-item-replied {
       padding: 8px 18px;
       margin-top: 10px;
       line-height: 20px;
       border: 1px solid @comment_replied_line_color;
     }
+    // 评论点赞样式
     .comment-item-opt {
       margin-top: 10px;
       line-height: 25px;

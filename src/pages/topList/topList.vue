@@ -1,5 +1,5 @@
-<!-- 热搜榜 -->
 <template>
+  <!-- 热搜榜 -->
   <div class="topList">
     <mz-loading v-model="mzLoadShow"></mz-loading>
     <template v-if="!mzLoadShow">
@@ -7,11 +7,7 @@
       <!-- 热搜榜 -->
       <div class="topList-content">
         <div v-for="(item, index) in list" class="list-item" :key="index">
-          <router-link
-            :to="`/music/details/${item.id}`"
-            tag="div"
-            class="topList-item"
-          >
+          <router-link :to="`/music/details/${item.id}`" tag="div" class="topList-item">
             <div class="topList-img">
               <img
                 v-lazy="`${item.coverImgUrl}?param=300y300`"
@@ -26,11 +22,7 @@
       <div class="topList-head">热门歌单</div>
       <div class="topList-content">
         <div v-for="(item, index) in hotList" class="list-item" :key="index">
-          <router-link
-            :to="`/music/details/${item.id}`"
-            tag="div"
-            class="topList-item"
-          >
+          <router-link :to="`/music/details/${item.id}`" tag="div" class="topList-item">
             <div class="topList-img">
               <img class="cover-img" v-lazy="`${item.picUrl}?param=300y300`" />
             </div>
@@ -49,26 +41,27 @@ import { loadMixin } from '@/utils/mixin.js'
 export default {
   name: 'TopList',
   components: {
-    MzLoading,
+    MzLoading
   },
   mixins: [loadMixin],
   data() {
     return {
       list: [], //特色歌单
-      hotList: [], //热门歌单
+      hotList: [] //热门歌单
     }
   },
   created() {
+    // 并行获取两个数据
     Promise.all([getToplistDetail(), getPersonalized()])
       .then(([topList, hotList]) => {
-        this.list = topList.list.filter((item) => item.ToplistType)
-        this.hotList = hotList.result.slice()
+        this.list = topList.list.filter(item => item.ToplistType)
+        this.hotList = hotList.result
         this._hideLoad()
       })
       .catch(() => {
         this._hideLoad()
       })
-  },
+  }
 }
 </script>
 

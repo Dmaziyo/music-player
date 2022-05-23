@@ -34,7 +34,7 @@ export default {
   name: 'Search',
   components: {
     MzLoading,
-    MusicList,
+    MusicList
   },
   mixins: [loadMixin],
   data() {
@@ -42,13 +42,14 @@ export default {
       searchValue: '', //搜索的关键词
       Artists: [], //热搜组
       list: [], //音乐list
-      page: 0,
+      page: 0
     }
   },
   computed: {
-    ...mapGetters(['playing', 'currentMusic']),
+    ...mapGetters(['playing', 'currentMusic'])
   },
   created() {
+    // 获取热搜词条
     searchHot().then(({ result }) => {
       this.Artists = result.hots.splice(0, 5)
       this.mzLoadShow = false
@@ -69,7 +70,7 @@ export default {
       }
       this.mzLoadShow = true
       search(this.searchValue).then(({ result }) => {
-        console.log(result.songs);
+        console.log(result.songs)
         this.list = formatSongs(result.songs)
         this._hideLoad()
       })
@@ -89,13 +90,13 @@ export default {
     },
     // 获取歌曲详细封面
     _getMusicDetail(id) {
-      return getMusicDetail(id).then((res) => res.songs[0].al.picUrl)
+      return getMusicDetail(id).then(res => res.songs[0].al.picUrl)
     },
     ...mapActions(['selectAddPlay']),
     ...mapMutations({
-      setPlaying: types.SET_PLAYING,
-    }),
-  },
+      setPlaying: types.SET_PLAYING
+    })
+  }
 }
 </script>
 

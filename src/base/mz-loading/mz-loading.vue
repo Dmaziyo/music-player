@@ -1,5 +1,5 @@
 <template>
-  <!-- 加载时的转圈 -->
+  <!-- 加载转场 -->
   <div v-show="value" class="mz-loading" :style="{backgroundColor:loadingBgColor}">
     <div class="mz-loading-content">
       <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
@@ -46,13 +46,14 @@ export default {
     // 是否显示
     value: {
       type: Boolean,
-      default: true,
+      default: true
     },
+    // 显示背景
     loadingBgColor: {
       type: String,
-      default: '',
-    },
-  },
+      default: ''
+    }
+  }
 }
 </script>
 

@@ -1,4 +1,5 @@
 <template>
+  <!-- 历史歌曲List -->
   <div class="historyList">
     <music-list :list="historyList" list-type="duration" @select="selectItem" @del="deleteItem">
       <div slot="listBtn" class="list-btn">
@@ -17,25 +18,27 @@ export default {
   name: 'HistoryList',
   components: {
     MusicList,
-    MzDialog,
+    MzDialog
   },
   computed: {
-    ...mapGetters(['historyList', 'playing', 'currentMusic']),
+    ...mapGetters(['historyList', 'playing', 'currentMusic'])
   },
   methods: {
+    // 选中歌曲,重新排列顺序
     selectItem(item, index) {
       this.selectPlay({
         list: this.historyList,
-        index,
+        index
       })
     },
+    // 删除歌曲
     deleteItem(index) {
       let list = [...this.historyList]
       list.splice(index, 1)
       this.removeHistory(list)
     },
-    ...mapActions(['selectPlay', 'removeHistory']),
-  },
+    ...mapActions(['selectPlay', 'removeHistory'])
+  }
 }
 </script>
 

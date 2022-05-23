@@ -9,10 +9,10 @@ Vue.config.productionTip = false
 Vue.use(mzToast)
 Vue.use(VueLazyload, {
   preLoad: 1,
-  loading: require('./assets/img/default.png'),
+  loading: require('./assets/img/default.png')
 })
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App) //引入了App组件
 }).$mount('#app')
