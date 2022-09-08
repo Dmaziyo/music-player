@@ -25,7 +25,7 @@ yarn serve 或者 yarn run serve
 
 ```javascript
 //下载网易云Node后端api
-git clone https://binaryify.github.io/NeteaseCloudMusicApi
+git clone --depth=1 https://github.com/Binaryify/NeteaseCloudMusicApi
 //下载依赖
 npm install
 //运行
